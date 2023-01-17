@@ -34,6 +34,6 @@ for point in points:
     rs.MoveObject(point, ghp.UnitZ(r.randint(5,10)))
 
 # Proper U-Count
-#UC = 
+UC = 10
 
-surface = ghp.SurfaceFromPoints(points, side_len1, True)
+surface = ghp.SurfaceFromPoints(points, UC, True)
