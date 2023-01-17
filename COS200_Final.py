@@ -1,29 +1,39 @@
-import rhinoscriptsyntax as rhino
-from random import random
+# Variables "Area", "S1_Detail", "S2_Detail", "Max Height" are defined outside object
 
-def generateMatrix(xMax, yMax, zMax, showPt = True):
-    ptMatrix = {}
+import rhinoscriptsyntax as rs
+import ghpythonlib.components as ghp
+import random as r
+import Rhino
 
-    for z in range(zMax):
-        for y in range(yMax):
-            for x in range(xMax):
-                ptMatrix[(x, y, z)] = (x * 8, y * 8, z * 8)
-                
-    if showPt:
-        rhino.AddPoints(list(ptMatrix.values()))
-    
-    return ptMatrix
+# Create Empty Point List
+points = []
+#points = ghp.Populate2D(Area, Detail, 1)
+#cornerPoints = ghp.ControlPolygon(Area)[1]
 
-def createElevation(ptMatrix):
-    for pt in ptMatrix:
-        rhino.MoveObject(pt, 3)
+SL = ghp.SegmentLengths(Area)
 
-def main():
-    xMax = 15
-    yMax = 15
-    zMax = 1
+side_len1 = round(float(SL[0]))
+side_len2 = round(float(SL[2]))
+#print(side_len1, side_len2)
 
-    ptMetrix = generateMatrix(xMax, yMax, zMax)
-    createElevation(ptMetrix)
+#side_len1/S1_Detail
 
-main()
+# Creating Point Array
+for e in range(int(S2_Detail)+1):
+    for i in range(int(S1_Detail)+1):
+        points.append(rs.CreatePoint((side_len1/S1_Detail*i),side_len2/S2_Detail*e,0))
+
+#points.append(rs.CreatePoint(1,1,1))
+#pList = ghp.Merge(points, cornerPoints)
+
+# Setting Base Thickness
+rs.MoveObjects(points, ghp.UnitZ(5))
+
+# Randomizing Heights
+for point in points:
+    rs.MoveObject(point, ghp.UnitZ(r.randint(5,10)))
+
+# Proper U-Count
+#UC = 
+
+surface = ghp.SurfaceFromPoints(points, side_len1, True)
